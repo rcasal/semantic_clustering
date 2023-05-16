@@ -41,7 +41,7 @@ def preprocess_text(text):
 
 def image_to_text(input_path,
                   output_path,
-                  remove_if_exist=False):
+                  remove_if_exists=False):
     """
     Extract text from images using an image captioning model and Tesseract OCR.
 
@@ -54,26 +54,16 @@ def image_to_text(input_path,
         ValueError: If the output folder already exists and `remove_if_exist` is False.
     """
     warnings.filterwarnings('ignore')  # to disable warnings
-
     # Define input and output paths
     input_path = os.path.join(input_path)
     output_path = os.path.join(output_path)
 
+    # Create output folder
+    create_output_dirs(output_path, remove_if_exists)
+
     # Define the encoder model
     model_name = "Salesforce/blip-image-captioning-large"
     image_to_text_pipe = pipeline("image-to-text", model=model_name, device=0)
-
-    # Check if output folder already exists
-    if os.path.exists(output_path):
-        if remove_if_exist:
-            print(f'Removing existing output folder {output_path}')
-            shutil.rmtree(output_path)
-        else:
-            raise ValueError(f'Output folder {output_path} already exists')
-
-    # Create output directories
-    print(f"Creating directories in {output_path}")
-    os.makedirs(output_path)
 
     # Loop through the images
     print(f'Generating text...')
@@ -103,5 +93,29 @@ def image_to_text(input_path,
 
     # Save dataframe
     print('Saving model')
-    df.to_csv(os.path.join(output_path, 'text_dataframe.csv'), index=False)
+    df.to_csv(os.path.join(output_path, 'ads_data.csv'), index=False)
 
+
+def create_output_dirs(output_path: str, remove_if_exists: bool = False) -> None:
+    """
+    Create output directories and handle existing output folder.
+
+    Args:
+        output_path (str): Path to the output directory.
+        remove_if_exists (bool, optional): Whether to remove the output folder if it already exists. 
+                                           Defaults to False.
+
+    Raises:
+        ValueError: If the output folder already exists and `remove_if_exists` is False.
+    """
+    # Check if output folder already exists
+    if os.path.exists(output_path):
+        if remove_if_exists:
+            print(f'Removing existing output folder {output_path}')
+            shutil.rmtree(output_path)
+        else:
+            raise ValueError(f'Output folder {output_path} already exists')
+
+    # Create output directories
+    print(f"Creating directories in {output_path}")
+    os.makedirs(output_path)
