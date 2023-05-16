@@ -40,7 +40,7 @@ def add_bert_embeddings(df: pd.DataFrame, columns: str or list) -> pd.DataFrame:
         return embedding.tolist()
 
     for column in columns:
-        print(column)
+        print(f'Processing {column}...')
         df[f'embedding_{column}'] = df[column].apply(get_bert_embeddings)
 
     return df

@@ -124,26 +124,30 @@ def create_output_dirs(output_path: str, remove_if_exists: bool = False) -> None
     os.makedirs(output_path)
 
 
-def fill_nan_values(df: pd.DataFrame) -> pd.DataFrame:
+def fill_nan_values(df: pd.DataFrame, replace_value: str = 'Text not identified.') -> pd.DataFrame:
     """
-    Replace NaN and None values in a pandas DataFrame with an empty string and return the cleaned DataFrame.
+    Replace NaN values in each column of a pandas DataFrame with a specified value and return the cleaned DataFrame.
 
     Args:
         df (pd.DataFrame): Input DataFrame.
+        replace_value (str, optional): Value to replace NaN values with. Defaults to 'Text not identified.'.
 
     Returns:
-        pd.DataFrame: DataFrame with NaN and None values replaced with an empty string.
+        pd.DataFrame: DataFrame with NaN values replaced.
     """
-    # Replace NaN and None values with an empty string
-    df_filled = df.fillna('')
+    for column in df.columns:
+        # Identify NaN values in the column
+        nan_indices = df[column].isna()
 
-    # Count the number of replaced values in each column
-    replaced_counts = df.isnull().sum()
+        # Replace NaN values with the specified value
+        df.loc[nan_indices, column] = replace_value
 
-    # Print a report with the replaced values count for each column
-    print("Replaced values count:")
-    for column, count in replaced_counts.items():
-        print(f"{column}: {count}")
+        # Count the number of replaced values in the column
+        replaced_count = nan_indices.sum()
 
-    return df_filled
+        # Print the replaced values count for the column
+        print(f"Replaced {replaced_count} NaN values in column '{column}'.")
+
+    return df
+
 
