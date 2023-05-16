@@ -39,9 +39,9 @@ def preprocess_text(text):
     return new_text
 
 
-def image_to_text(input_path='campaign_assets_rc/CampaignAssets/MicrosoftSurfacePro9',
-                  output_path='/content/text',
-                  remove_if_exist=True):
+def image_to_text(input_path,
+                  output_path,
+                  remove_if_exist=False):
     """
     Extract text from images using an image captioning model and Tesseract OCR.
 
