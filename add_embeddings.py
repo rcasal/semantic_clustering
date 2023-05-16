@@ -1,6 +1,6 @@
 import argparse
 import pandas as pd
-from utils.utils import image_to_text, create_output_dirs
+from utils.utils import create_output_dirs, fill_nan_values
 from utils.embeddings_utils import add_bert_embeddings
 
 def parse_args():
@@ -25,6 +25,9 @@ def main():
     # Read the CSV file with generated text and image text
     df = pd.read_csv(f'{args.input_path}/ads_data.csv')
     
+    # Drop NaN
+    df = fill_nan_values(df)
+
     # Get the columns for BERT embeddings
     columns = args.columns
     

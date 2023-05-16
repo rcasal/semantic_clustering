@@ -90,10 +90,7 @@ def image_to_text(input_path,
 
     # Combine the generated text and OCR text together
     df["combined"] = ("Description: " + df.generated_text.str.strip() + "; Text: " + df.ocr_text.str.strip())
-
-    # Drop NaN
-    df = fill_nan_values(df)
-    
+   
     # Save dataframe
     print('Saving model')
     df.to_csv(os.path.join(output_path, 'ads_data.csv'), index=False)
