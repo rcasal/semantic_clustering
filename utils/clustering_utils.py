@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 from PIL import Image
 import matplotlib.pyplot as plt
@@ -29,11 +30,11 @@ class KMeansClustering:
         df['embedding_concatenated'] = df[columns].apply(lambda x: np.hstack(x.values.tolist()), axis=1)
 
         # Select the concatenated embedding arrays
-        data = np.vstack(df['embedding_concatenated'].values)
+        self.data = np.vstack(df['embedding_concatenated'].values)
 
         # Perform K-means clustering
         kmeans = KMeans(n_clusters=num_clusters)
-        df['cluster_label'] = kmeans.fit_predict(data)
+        df['cluster_label'] = kmeans.fit_predict(self.data)
 
         return df
 
@@ -46,7 +47,7 @@ class KMeansClustering:
         """
         # Create a t-SNE model and transform the data
         tsne = TSNE(n_components=2, perplexity=15, random_state=42, init='random', learning_rate=200)
-        vis_dims = tsne.fit_transform(data)
+        vis_dims = tsne.fit_transform(self.data)
 
         colors = ["red", "darkorange", "gold", "turquoise", "darkgreen"]
 
