@@ -2,6 +2,11 @@ import pandas as pd
 from PIL import Image
 import matplotlib.pyplot as plt
 import os
+import numpy as np
+from sklearn.cluster import KMeans
+from sklearn.manifold import TSNE
+import matplotlib.pyplot as plt
+import matplotlib
 
 class KMeansClustering:
     def clusterize(self, df: pd.DataFrame, columns: list, num_clusters: int) -> pd.DataFrame:
