@@ -100,4 +100,5 @@ def image_to_text(input_path,
 
     # Save dataframe
     print('Saving model')
-    df.to_csv('text/text_dataframe.csv', index=False)
+    df.to_csv(os.path.join(output_path, 'text_dataframe.csv'), index=False)
+
