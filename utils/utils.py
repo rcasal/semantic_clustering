@@ -91,6 +91,9 @@ def image_to_text(input_path,
     # Combine the generated text and OCR text together
     df["combined"] = ("Description: " + df.generated_text.str.strip() + "; Text: " + df.ocr_text.str.strip())
 
+    # Drop NaN
+    df = drop_nan_rows(df)
+    
     # Save dataframe
     print('Saving model')
     df.to_csv(os.path.join(output_path, 'ads_data.csv'), index=False)
@@ -119,3 +122,31 @@ def create_output_dirs(output_path: str, remove_if_exists: bool = False) -> None
     # Create output directories
     print(f"Creating directories in {output_path}")
     os.makedirs(output_path)
+
+
+def drop_nan_rows(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Drop rows with NaN values from a pandas DataFrame and return the cleaned DataFrame.
+
+    Args:
+        df (pd.DataFrame): Input DataFrame.
+
+    Returns:
+        pd.DataFrame: DataFrame with NaN rows removed.
+    """
+    # Count the number of rows before dropping NaN rows
+    initial_row_count = len(df)
+
+    # Drop rows with NaN values
+    df_dropped = df.dropna()
+
+    # Count the number of rows after dropping NaN rows
+    final_row_count = len(df_dropped)
+
+    # Calculate the number of removed rows
+    removed_row_count = initial_row_count - final_row_count
+
+    # Print a report with the removed rows
+    print(f'Removed {removed_row_count} rows with NaN values.')
+
+    return df_dropped
