@@ -2,7 +2,7 @@ import torch
 from transformers import BertTokenizer, BertModel
 import pandas as pd
 
-def add_bert_embeddings(df: pd.DataFrame, column: str or list) -> pd.DataFrame:
+def add_bert_embeddings(df: pd.DataFrame, columns: str or list) -> pd.DataFrame:
     """
     Add BERT embeddings to the specified column(s) of the DataFrame.
 
@@ -14,9 +14,9 @@ def add_bert_embeddings(df: pd.DataFrame, column: str or list) -> pd.DataFrame:
         pd.DataFrame: DataFrame with the added embeddings column(s).
     """       
     # Data type sanity check
-    if isinstance(column, str):
+    if isinstance(columns, str):
         columns = [columns]
-    elif isinstance(column, list):
+    elif isinstance(columns, list):
         columns = columns
     else:
         raise ValueError("Invalid column parameter. Expected str or list.")
