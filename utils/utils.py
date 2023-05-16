@@ -92,7 +92,7 @@ def image_to_text(input_path,
     df["combined"] = ("Description: " + df.generated_text.str.strip() + "; Text: " + df.ocr_text.str.strip())
 
     # Drop NaN
-    df = drop_nan_rows(df)
+    df = fill_nan_values(df)
     
     # Save dataframe
     print('Saving model')
@@ -124,29 +124,26 @@ def create_output_dirs(output_path: str, remove_if_exists: bool = False) -> None
     os.makedirs(output_path)
 
 
-def drop_nan_rows(df: pd.DataFrame) -> pd.DataFrame:
+def fill_nan_values(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Drop rows with NaN values from a pandas DataFrame and return the cleaned DataFrame.
+    Replace NaN and None values in a pandas DataFrame with an empty string and return the cleaned DataFrame.
 
     Args:
         df (pd.DataFrame): Input DataFrame.
 
     Returns:
-        pd.DataFrame: DataFrame with NaN rows removed.
+        pd.DataFrame: DataFrame with NaN and None values replaced with an empty string.
     """
-    # Count the number of rows before dropping NaN rows
-    initial_row_count = len(df)
+    # Replace NaN and None values with an empty string
+    df_filled = df.fillna('')
 
-    # Drop rows with NaN values
-    df_dropped = df.dropna()
+    # Count the number of replaced values in each column
+    replaced_counts = df.isnull().sum()
 
-    # Count the number of rows after dropping NaN rows
-    final_row_count = len(df_dropped)
+    # Print a report with the replaced values count for each column
+    print("Replaced values count:")
+    for column, count in replaced_counts.items():
+        print(f"{column}: {count}")
 
-    # Calculate the number of removed rows
-    removed_row_count = initial_row_count - final_row_count
+    return df_filled
 
-    # Print a report with the removed rows
-    print(f'Removed {removed_row_count} rows with NaN values.')
-
-    return df_dropped
