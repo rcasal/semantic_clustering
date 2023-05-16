@@ -96,7 +96,10 @@ def image_to_text(input_path,
             file_names.append(filename)
 
     # Create a dataframe from the generated text and file names
-    df = pd.DataFrame({'file_name': file_names, 'generated_text': generated_texts, 'image_text': image_texts})
+    df = pd.DataFrame({'file_name': file_names, 'generated_text': generated_texts, 'ocr_text': image_texts})
+
+    # Combine the generated text and OCR text together
+    df["combined"] = ("Description: " + df.generated_text.str.strip() + "; Text: " + df.ocr_text.str.strip())
 
     # Save dataframe
     print('Saving model')
