@@ -38,7 +38,7 @@ def main():
     df_with_embeddings = add_clip_embeddings(df_with_embeddings, columns)
     
     # Call the add_image_embeddings function
-    df_with_embeddings = add_image_embeddings(df)
+    df_with_embeddings = add_image_embeddings(df_with_embeddings)
     
     # Save the DataFrame with the added embeddings column(s)
     df_with_embeddings.to_csv(f'{args.output_path}/ads_data.csv', index=False)
