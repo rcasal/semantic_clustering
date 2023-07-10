@@ -108,7 +108,7 @@ def get_single_image_embedding(source_img_path):
     return embedding_as_np
 
 def add_image_embeddings(df: pd.DataFrame) -> pd.DataFrame:
-    df["img_embeddings"] = df['souce_img_path'].apply(get_single_image_embedding)
+    df["img_embeddings"] = df['source_img_path'].apply(get_single_image_embedding)
     df['img_embeddings'] = df['img_embeddings'].apply(lambda x: np.array(x.strip('[]').split(), dtype=np.float64))
     df['img_embeddings'] = df['img_embeddings'].apply(lambda x: x.reshape(1, -1))
     
