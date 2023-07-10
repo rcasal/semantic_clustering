@@ -32,7 +32,7 @@ def main():
     columns = args.columns
     
     # Call the add_bert_embeddings function
-    #df_with_embeddings = add_bert_embeddings(df, columns)
+    df_with_embeddings = add_bert_embeddings(df, columns)
 
     # Call the add_clip_embeddings function
     df_with_embeddings = add_clip_embeddings(df, columns)

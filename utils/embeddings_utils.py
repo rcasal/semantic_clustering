@@ -84,7 +84,8 @@ def add_clip_embeddings(df: pd.DataFrame, columns: str or list) -> pd.DataFrame:
 
     for column in columns:
         print(f'Processing {column}...')
-        df[f'clip_embedding_{column}'] = df[column].apply(get_clip_embeddings)
+        if column != 'combined':
+            df[f'clip_embedding_{column}'] = df[column].apply(get_clip_embeddings)
 
     return df
 
