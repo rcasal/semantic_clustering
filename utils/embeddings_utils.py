@@ -99,7 +99,7 @@ def get_single_image_embedding(source_img_path):
         text = None,
         images = Image.open(source_img_path).convert("RGB"),
         return_tensors="pt"
-        )["pixel_values"].to(device)
+        )["pixel_values"]#.to(device)
     embedding = clip_model.get_image_features(image)
 
     # convert the embeddings to numpy array
