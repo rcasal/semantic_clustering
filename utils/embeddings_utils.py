@@ -70,7 +70,7 @@ def add_clip_embeddings(df: pd.DataFrame, columns: str or list) -> pd.DataFrame:
     # Define the model ID
     model_ID = "openai/clip-vit-base-patch32"
     # Load pre-trained model and tokenizer
-    clip_model = CLIPModel.from_pretrained(model_ID).to(device)
+    clip_model = CLIPModel.from_pretrained(model_ID)#.to(device)
     clip_processor = CLIPProcessor.from_pretrained(model_ID)
     clip_tokenizer = CLIPTokenizer.from_pretrained(model_ID)
 
