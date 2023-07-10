@@ -1,6 +1,7 @@
 import torch
 from transformers import BertTokenizer, BertModel, CLIPProcessor, CLIPModel, CLIPTokenizer
 import pandas as pd
+from PIL import Image
 
 
 def add_bert_embeddings(df: pd.DataFrame, columns: str or list) -> pd.DataFrame:
@@ -88,3 +89,23 @@ def add_clip_embeddings(df: pd.DataFrame, columns: str or list) -> pd.DataFrame:
 
     return df
 
+
+def get_single_image_embedding(source_img_path):
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    model_ID = "openai/clip-vit-base-patch32"
+    clip_model = CLIPModel.from_pretrained(model_ID)#.to(device)
+    clip_processor = CLIPProcessor.from_pretrained(model_ID)
+    image = clip_processor(
+        text = None,
+        images = Image.open(source_img_path).convert("RGB"),
+        return_tensors="pt"
+        )["pixel_values"].to(device)
+    embedding = clip_model.get_image_features(image)
+
+    # convert the embeddings to numpy array
+    embedding_as_np = embedding.cpu().detach().numpy()
+    return embedding_as_np
+
+def add_image_embeddings(df: pd.DataFrame) -> pd.DataFrame:
+	df["img_embeddings"] = df['souce_img_path'].apply(get_single_image_embedding)
+	return df

@@ -1,7 +1,7 @@
 import argparse
 import pandas as pd
 from utils.utils import create_output_dirs, fill_nan_values
-from utils.embeddings_utils import add_bert_embeddings, add_clip_embeddings
+from utils.embeddings_utils import add_bert_embeddings, add_clip_embeddings, add_image_embeddings
 
 def parse_args():
     # Create the argument parser
@@ -32,10 +32,13 @@ def main():
     columns = args.columns
     
     # Call the add_bert_embeddings function
-    df_with_embeddings = add_bert_embeddings(df, columns)
+    #df_with_embeddings = add_bert_embeddings(df, columns)
 
     # Call the add_clip_embeddings function
-    df_with_embeddings = add_clip_embeddings(df, columns)
+    #df_with_embeddings = add_clip_embeddings(df_with_embeddings, columns)
+    
+    # Call the add_image_embeddings function
+    df_with_embeddings = add_image_embeddings(df)
     
     # Save the DataFrame with the added embeddings column(s)
     df_with_embeddings.to_csv(f'{args.output_path}/ads_data.csv', index=False)
