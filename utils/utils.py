@@ -41,7 +41,8 @@ def preprocess_text(text):
 
 def image_to_text(input_path,
                   output_path,
-                  remove_if_exists=False):
+                  remove_if_exists=False,
+                  model_name='clip'):
     """
     Extract text from images using an image captioning model and Tesseract OCR.
 
@@ -62,7 +63,10 @@ def image_to_text(input_path,
     create_output_dirs(output_path, remove_if_exists)
 
     # Define the encoder model
-    model_name = "Salesforce/blip-image-captioning-large"
+    if model_name.lower() == 'clip':
+        model_name = "openai/clip-vit-base-patch32"
+    if model_name.lower() == 'blip':
+        model_name = "Salesforce/blip-image-captionin sg-large"
     image_to_text_pipe = pipeline("image-to-text", model=model_name, device=0)
 
     # Loop through the images

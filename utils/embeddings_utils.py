@@ -2,6 +2,7 @@ import torch
 from transformers import BertTokenizer, BertModel
 import pandas as pd
 
+
 def add_bert_embeddings(df: pd.DataFrame, columns: str or list) -> pd.DataFrame:
     """
     Add BERT embeddings to the specified column(s) of the DataFrame.
