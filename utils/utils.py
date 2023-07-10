@@ -70,10 +70,12 @@ def image_to_text(input_path,
     generated_texts = []
     file_names = []
     image_texts = []
+    source_img_paths = []
     for filename in tqdm(os.listdir(input_path)):
         # Load the image
         if filename.endswith('.png') or filename.endswith('.jpg'):
-            img = Image.open(os.path.join(input_path, filename))
+            source_img_path = os.path.join(input_path, filename)
+            img = Image.open(source_img_path)
             # Get image description
             with torch.no_grad():
                 generated_text = image_to_text_pipe(img)[0]['generated_text']
@@ -84,9 +86,10 @@ def image_to_text(input_path,
             generated_texts.append(generated_text)
             image_texts.append(image_text)
             file_names.append(filename)
+            source_img_paths.append(source_img_path)
 
     # Create a dataframe from the generated text and file names
-    df = pd.DataFrame({'file_name': file_names, 'generated_text': generated_texts, 'ocr_text': image_texts})
+    df = pd.DataFrame({'file_name': file_names, 'generated_text': generated_texts, 'ocr_text': image_texts, 'souce_img_path': source_img_paths})
 
     # Combine the generated text and OCR text together
     df["combined"] = ("Description: " + df.generated_text.str.strip() + "; Text: " + df.ocr_text.str.strip())
