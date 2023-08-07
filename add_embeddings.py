@@ -35,7 +35,7 @@ def main():
     df_with_embeddings = add_bert_embeddings(df, columns)
 
     # Call the add_clip_embeddings function
-    df_with_embeddings = add_clip_embeddings(df_with_embeddings, columns)
+    # df_with_embeddings = add_clip_embeddings(df_with_embeddings, columns) # there's an error with the lenght
     
     # Call the add_image_embeddings function
     df_with_embeddings = add_image_embeddings(df_with_embeddings)
