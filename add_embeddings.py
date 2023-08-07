@@ -29,13 +29,13 @@ def main():
     df = fill_nan_values(df)
 
     # Get the columns for BERT embeddings
-    columns = args.columns
+    columns_bert = args.columns
     
     # Call the add_bert_embeddings function
-    df_with_embeddings = add_bert_embeddings(df, columns)
+    df_with_embeddings = add_bert_embeddings(df, columns_bert)
 
     # Call the add_clip_embeddings function
-    # df_with_embeddings = add_clip_embeddings(df_with_embeddings, columns) # there's an error with the lenght
+    df_with_embeddings = add_clip_embeddings(df_with_embeddings, 'generated_text') # there's an error with the lenght
     
     # Call the add_image_embeddings function
     df_with_embeddings = add_image_embeddings(df_with_embeddings)
