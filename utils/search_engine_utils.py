@@ -1,5 +1,5 @@
 from sklearn.metrics.pairwise import cosine_similarity
-from utils.embeddings_utils import get_single_image_embedding, get_clip_embeddings
+from semantic_clustering.utils.embeddings_utils import get_single_image_embedding, get_clip_embeddings
 from PIL import Image
 import matplotlib.pyplot as plt
 
