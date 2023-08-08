@@ -1,7 +1,7 @@
 import argparse
 import pandas as pd
 from utils.utils import create_output_dirs
- 
+import os
 
 def parse_args():
     # Create the argument parser
@@ -24,9 +24,9 @@ def main():
     create_output_dirs(args.output_path, args.remove_if_exists)
 
     # Read the dataframes
-    df1 = pd.read_csv('02_embeddings_text/ads_data.csv')
-    df2 = pd.read_csv('02_google_embeddings/ads_data.csv')
-    df3 = pd.read_csv('02_vision_api_df/ads_data.csv')
+    df1 = pd.read_csv(os.path.join(args.embedding_text_path, 'ads_data.csv')) 
+    df2 = pd.read_csv(os.path.join(args.google_embedding_path, 'ads_data.csv')) 
+    df3 = pd.read_csv(os.path.join(args.vision_api_path, 'ads_data.csv')) 
 
     # Merge df2 and df3 using 'gcsUri' and 'creative_id'
     df2_and_df3 = pd.merge(df2, df3, left_on='gcsUri', right_on='creative_id', how='inner')
