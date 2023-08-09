@@ -3,21 +3,15 @@ import pandas as pd
 from PIL import Image
 import matplotlib.pyplot as plt
 import os
-import numpy as np
 from sklearn.cluster import KMeans
 from sklearn.manifold import TSNE
-import matplotlib.pyplot as plt
 import matplotlib
 
-
 import hdbscan
-import pandas as pd
-import numpy as np
 from sklearn.manifold import TSNE
-import matplotlib.pyplot as plt
-from PIL import Image
 import os
-
+import plotly.express as px
+from mpl_toolkits.mplot3d import Axes3D
 
 class HDBSCANClustering:
     def clusterize(self, df: pd.DataFrame, columns: list) -> pd.DataFrame:
@@ -127,13 +121,15 @@ class KMeansClustering:
 
         return df
 
-    def visualize_clusters(self, df: pd.DataFrame, n_components: int = 2):
+
+    def visualize_clusters(self, df: pd.DataFrame, n_components: int = 2, interactive_library: str = 'matplotlib'):
         """
         Visualize the clusters using t-SNE.
 
         Args:
             df (pd.DataFrame): DataFrame with cluster labels.
             n_components (int): Number of components for t-SNE (2 or 3).
+            interactive_library (str): Library to use for interactive visualization ('matplotlib' or 'plotly').
         """
         if n_components not in [2, 3]:
             raise ValueError("n_components should be either 2 or 3")
@@ -149,22 +145,37 @@ class KMeansClustering:
 
         color_indices = df.cluster_label.values - 1
 
-        if n_components == 2:
-            colormap = plt.cm.get_cmap('viridis', len(colors))
-            plt.scatter(x, y, c=color_indices, cmap=colormap, alpha=0.3)
-            plt.title("Campaigns visualized in language using t-SNE (2D)")
-            plt.colorbar()
-            plt.show()
-        else:  # n_components == 3
-            colormap = plt.cm.get_cmap('viridis', len(colors))
-            fig = plt.figure()
-            ax = fig.add_subplot(111, projection='3d')
-            ax.scatter(x, y, vis_dims[:, 2], c=color_indices, cmap=colormap, alpha=0.3)
-            ax.set_title("Campaigns visualized in language using t-SNE (3D)")
-            ax.set_xlabel("Component 1")
-            ax.set_ylabel("Component 2")
-            ax.set_zlabel("Component 3")
-            plt.show()
+        if interactive_library == 'matplotlib':
+            if n_components == 2:
+                colormap = plt.cm.get_cmap('viridis', len(colors))
+                plt.scatter(x, y, c=color_indices, cmap=colormap, alpha=0.3)
+                plt.title("Campaigns visualized in language using t-SNE (2D)")
+                plt.colorbar()
+                plt.show()
+            else:  # n_components == 3
+                colormap = plt.cm.get_cmap('viridis', len(colors))
+                fig = plt.figure()
+                ax = fig.add_subplot(111, projection='3d')
+                ax.scatter(x, y, vis_dims[:, 2], c=color_indices, cmap=colormap, alpha=0.3)
+                ax.set_title("Campaigns visualized in language using t-SNE (3D)")
+                ax.set_xlabel("Component 1")
+                ax.set_ylabel("Component 2")
+                ax.set_zlabel("Component 3")
+                plt.show()
+        elif interactive_library == 'plotly':
+            if n_components == 2:
+                colormap = px.colors.sequential.Viridis
+                fig = px.scatter(x=x, y=y, color=color_indices, color_continuous_scale=colormap)
+                fig.update_layout(title_text="Campaigns visualized in language using t-SNE (2D)")
+                fig.show()
+            else:  # n_components == 3
+                colormap = px.colors.sequential.Viridis
+                fig = px.scatter_3d(x=x, y=y, z=[z for _, _, z in vis_dims],
+                                    color=color_indices, color_continuous_scale=colormap)
+                fig.update_layout(title_text="Campaigns visualized in language using t-SNE (3D)")
+                fig.show()
+        else:
+            raise ValueError("Invalid interactive_library value. Use 'matplotlib' or 'plotly'.")
 
 
     def visualize_images(self, df: pd.DataFrame, input_path: str):
