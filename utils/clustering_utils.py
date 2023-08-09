@@ -164,7 +164,6 @@ class KMeansClustering:
             ax.set_xlabel("Component 1")
             ax.set_ylabel("Component 2")
             ax.set_zlabel("Component 3")
-            plt.colorbar()
             plt.show()
 
 
