@@ -127,7 +127,7 @@ class KMeansClustering:
 
         return df
 
-    def visualize_clusters(self, df: pd.DataFrame):
+    def visualize_clusters(self, df: pd.DataFrame, n_componentes=2):
         """
         Visualize the clusters using t-SNE.
 
