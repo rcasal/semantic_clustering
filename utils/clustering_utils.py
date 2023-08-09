@@ -127,27 +127,46 @@ class KMeansClustering:
 
         return df
 
-    def visualize_clusters(self, df: pd.DataFrame):
+    def visualize_clusters(df: pd.DataFrame, n_components: int = 2):
         """
         Visualize the clusters using t-SNE.
 
         Args:
             df (pd.DataFrame): DataFrame with cluster labels.
+            n_components (int): Number of components for t-SNE (2 or 3).
         """
+        if n_components not in [2, 3]:
+            raise ValueError("n_components should be either 2 or 3")
+
         # Create a t-SNE model and transform the data
-        tsne = TSNE(n_components=2, perplexity=15, random_state=42, init='random', learning_rate=200)
-        vis_dims = tsne.fit_transform(self.data)
+        tsne = TSNE(n_components=n_components, perplexity=15, random_state=42, init='random', learning_rate=200)
+        vis_dims = tsne.fit_transform(df.data)
 
         colors = ["red", "darkorange", "gold", "turquoise", "darkgreen"]
 
-        x = [x for x, y in vis_dims]
-        y = [y for x, y in vis_dims]
+        x = [x for x, y, _ in vis_dims] if n_components == 3 else [x for x, _ in vis_dims]
+        y = [y for x, y, _ in vis_dims] if n_components == 3 else [y for _, y in vis_dims]
+
         color_indices = df.cluster_label.values - 1
 
-        colormap = matplotlib.colors.ListedColormap(colors)
-        plt.scatter(x, y, c=color_indices, cmap=colormap, alpha=0.3)
-        plt.title("Campaigns visualized in language using t-SNE")
-        plt.show()
+        if n_components == 2:
+            colormap = plt.cm.get_cmap('viridis', len(colors))
+            plt.scatter(x, y, c=color_indices, cmap=colormap, alpha=0.3)
+            plt.title("Campaigns visualized in language using t-SNE (2D)")
+            plt.colorbar()
+            plt.show()
+        else:  # n_components == 3
+            colormap = plt.cm.get_cmap('viridis', len(colors))
+            fig = plt.figure()
+            ax = fig.add_subplot(111, projection='3d')
+            ax.scatter(x, y, vis_dims[:, 2], c=color_indices, cmap=colormap, alpha=0.3)
+            ax.set_title("Campaigns visualized in language using t-SNE (3D)")
+            ax.set_xlabel("Component 1")
+            ax.set_ylabel("Component 2")
+            ax.set_zlabel("Component 3")
+            plt.colorbar()
+            plt.show()
+
 
     def visualize_images(self, df: pd.DataFrame, input_path: str):
         """
