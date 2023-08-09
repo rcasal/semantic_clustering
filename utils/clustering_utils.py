@@ -140,7 +140,7 @@ class KMeansClustering:
 
         # Create a t-SNE model and transform the data
         tsne = TSNE(n_components=n_components, perplexity=15, random_state=42, init='random', learning_rate=200)
-        vis_dims = tsne.fit_transform(df.data)
+        vis_dims = tsne.fit_transform(self.data)
 
         colors = ["red", "darkorange", "gold", "turquoise", "darkgreen"]
 
