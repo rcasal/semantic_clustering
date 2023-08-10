@@ -21,7 +21,7 @@ def get_vision_api_features(response_list) -> pd.DataFrame:
         object_annotations_name = [d['name'] for d in creative_data["localized_object_annotations"] if d["score"] > 0.65]
         
         # Logo annotations
-        logo_annotation, logo_annotation_centroid = get_text_annotations(creative_data)
+        logo_annotation, logo_annotation_centroid = get_logo_annotations(creative_data)
         
         # Face annotations
         face_annotations = get_face_annotations(creative_data)
