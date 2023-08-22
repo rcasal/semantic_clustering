@@ -161,7 +161,7 @@ class KMeansClustering:
             df (pd.DataFrame): DataFrame with cluster labels.
             interactive_library (str): Library to use for interactive visualization ('matplotlib' or 'plotly').
         """
-        if not hasattr(self, 'vis_dims'):
+        if not hasattr(self, 'n_components'):
             raise ValueError("Dimensionality reduction has not been performed. Call dimensionality_reduction first.")
 
         colors = ["red", "darkorange", "gold", "turquoise", "darkgreen"]
