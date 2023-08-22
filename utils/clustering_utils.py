@@ -122,33 +122,56 @@ class KMeansClustering:
         return df
 
 
-    def visualize_clusters(self, df: pd.DataFrame, n_components: int = 2, interactive_library: str = 'matplotlib'):
+    def dimensionality_reduction(self, df: pd.DataFrame, n_components: int) -> pd.DataFrame:
         """
-        Visualize the clusters using t-SNE.
+        Perform dimensionality reduction using t-SNE and add the reduced components to the DataFrame.
 
         Args:
             df (pd.DataFrame): DataFrame with cluster labels.
             n_components (int): Number of components for t-SNE (2 or 3).
-            interactive_library (str): Library to use for interactive visualization ('matplotlib' or 'plotly').
+
+        Returns:
+            pd.DataFrame: DataFrame with added X, Y, and Z (if applicable) columns.
         """
-        if n_components not in [2, 3]:
+        self.n_components = n_components
+        if self.n_components not in [2, 3]:
             raise ValueError("n_components should be either 2 or 3")
 
         # Create a t-SNE model and transform the data
-        tsne = TSNE(n_components=n_components, perplexity=15, random_state=42, init='random', learning_rate=200)
+        tsne = TSNE(n_components=self.n_components, perplexity=15, random_state=42, init='random', learning_rate=200)
         vis_dims = tsne.fit_transform(self.data)
 
-        colors = ["red", "darkorange", "gold", "turquoise", "darkgreen"]
+        # Add components to DataFrame
+        if n_components == 2:
+            df['X'] = vis_dims[:, 0]
+            df['Y'] = vis_dims[:, 1]
+        else:
+            df['X'] = vis_dims[:, 0]
+            df['Y'] = vis_dims[:, 1]
+            df['Z'] = vis_dims[:, 2]
 
-        x = [x for x, y, _ in vis_dims] if n_components == 3 else [x for x, _ in vis_dims]
-        y = [y for x, y, _ in vis_dims] if n_components == 3 else [y for _, y in vis_dims]
+        return df
+        
+    
+    def visualize_clusters(self, df: pd.DataFrame, interactive_library: str = 'matplotlib'):
+        """
+        Visualize the clusters using the stored reduced components.
+
+        Args:
+            df (pd.DataFrame): DataFrame with cluster labels.
+            interactive_library (str): Library to use for interactive visualization ('matplotlib' or 'plotly').
+        """
+        if not hasattr(self, 'vis_dims'):
+            raise ValueError("Dimensionality reduction has not been performed. Call dimensionality_reduction first.")
+
+        colors = ["red", "darkorange", "gold", "turquoise", "darkgreen"]
 
         color_indices = df.cluster_label.values - 1
 
         if interactive_library == 'matplotlib':
-            if n_components == 2:
+            if self.n_components == 2:
                 colormap = plt.cm.get_cmap('viridis', len(colors))
-                plt.scatter(x, y, c=color_indices, cmap=colormap, alpha=0.3)
+                plt.scatter(df.x, df.y, c=color_indices, cmap=colormap, alpha=0.3)
                 plt.title("Campaigns visualized in language using t-SNE (2D)")
                 plt.colorbar()
                 plt.show()
@@ -156,21 +179,21 @@ class KMeansClustering:
                 colormap = plt.cm.get_cmap('viridis', len(colors))
                 fig = plt.figure()
                 ax = fig.add_subplot(111, projection='3d')
-                ax.scatter(x, y, vis_dims[:, 2], c=color_indices, cmap=colormap, alpha=0.3)
+                ax.scatter(df.x, df.y, df.z, c=color_indices, cmap=colormap, alpha=0.3)
                 ax.set_title("Campaigns visualized in language using t-SNE (3D)")
                 ax.set_xlabel("Component 1")
                 ax.set_ylabel("Component 2")
                 ax.set_zlabel("Component 3")
                 plt.show()
         elif interactive_library == 'plotly':
-            if n_components == 2:
+            if self.n_components == 2:
                 colormap = px.colors.sequential.Viridis
-                fig = px.scatter(x=x, y=y, color=color_indices, color_continuous_scale=colormap)
+                fig = px.scatter(x=df.x, y=df.y, color=color_indices, color_continuous_scale=colormap)
                 fig.update_layout(title_text="Campaigns visualized in language using t-SNE (2D)")
                 fig.show()
             else:  # n_components == 3
                 colormap = px.colors.sequential.Viridis
-                fig = px.scatter_3d(x=x, y=y, z=[z for _, _, z in vis_dims],
+                fig = px.scatter_3d(x=df.x, y=df.y, z=df.z,
                                     color=color_indices, color_continuous_scale=colormap)
                 fig.update_layout(title_text="Campaigns visualized in language using t-SNE (3D)")
                 fig.show()
